@@ -1,113 +1,94 @@
-//global scope variables
-
+// Global scope variables
 let humanScore = 0;
 let computerScore = 0;
-
-
-
-//This function sets computer choice, randomly selecting a number between 1 and 3
+let currentRound = 0;
+const TOTAL_ROUNDS = 5;
 
 function getComputerChoice() {
-    const randomNumber =  Math.floor(Math.random() *3 +1) //selects a random number betweeen 1 and 3. If you do not add the +1 it also includes 0
-
-    if (randomNumber ===1) {
+    const randomNumber = Math.floor(Math.random() * 3 + 1);
+    if (randomNumber === 1) {
         return "rock";
     } else if (randomNumber === 2) {
         return "paper";
-    }
-    else {
+    } else {
         return "scissors";
     }
-    
 }
 
-function getHumanChoice() {
-    let userInput; 
-    const validChoices = ["rock", "paper", "scissors"]; //an array with the correct answers, lowerCase for validating
-
-    while (true){
-        userInput = prompt ("Please write rock, paper or scissors").toLowerCase(); //converts the prompt to lowerCase which makes validating easier
-        
-        if (validChoices.includes(userInput)){
-            return userInput; //returns the valid input
-        } else {
-            alert ("try again, idiot");
-        }
-
+function playRound(playerSelection) {
+    // Don't continue if game is over
+    if (currentRound >= TOTAL_ROUNDS) {
+        alert("Game is over! Please click Reset to play again.");
+        return;
     }
 
-}
-
-
-const humanSelection = getHumanChoice(); 
-const computerSelection = getComputerChoice();
-
-function playRound(humanChoice, computerChoice){ //the naming of the arguments is arbitrary. It could be a, b. But this is readable
-    if ((humanChoice === "rock" && computerChoice === "scissors") ||
-        (humanChoice === "paper" && computerChoice === "rock") ||
-        (humanChoice === "scissors" && computerChoice === "paper")) {
-            humanScore++;
-            console.log("You Win");
-        }
-        else if ((computerChoice === "rock" && humanChoice === "scissors") ||
-                (computerChoice === "paper" && humanChoice === "rock") ||
-                (computerChoice === "scissors" && humanChoice === "paper")) {
-                    computerScore++;
-                    console.log("You looose");
-                }
-        else{
-            console.log("It is a draw, try again")
-        }
-
-        console.log("Score: " +  "Humans " + humanScore, "Computer "+ computerScore)
-        
-
-}
-
-// Function to play a single round of the game
-function playRound(humanChoice, computerChoice) {
+    currentRound++;
+    document.getElementById("round").textContent = `Round ${currentRound} of ${TOTAL_ROUNDS}`;
+    
+    const humanChoice = playerSelection;
+    const computerChoice = getComputerChoice();
+    
+    // Display choices
+    document.getElementById("results").textContent = 
+        `You chose ${humanChoice}, computer chose ${computerChoice}. `;
+    
     if ((humanChoice === "rock" && computerChoice === "scissors") ||
         (humanChoice === "paper" && computerChoice === "rock") ||
         (humanChoice === "scissors" && computerChoice === "paper")) {
         humanScore++;
-        console.log("You Win!");
+        document.getElementById("results").textContent += "You win this round!";
     } else if ((computerChoice === "rock" && humanChoice === "scissors") ||
                (computerChoice === "paper" && humanChoice === "rock") ||
                (computerChoice === "scissors" && humanChoice === "paper")) {
         computerScore++;
-        console.log("You Lose!");
+        document.getElementById("results").textContent += "You lose this round!";
     } else {
-        console.log("It's a draw!");
+        document.getElementById("results").textContent += "This round is a tie!";
     }
-
-    console.log("Score: Humans " + humanScore + ", Computer " + computerScore);
+    
+    document.getElementById("score").textContent = 
+        `Human: ${humanScore} Computer: ${computerScore}`;
+        
+    // Check if this was the last round
+    if (currentRound === TOTAL_ROUNDS) {
+        endGame();
+    }
 }
 
-// Function to play the game (best of 5 rounds)
-function playGame() {
-    for (let rounds = 0; rounds < 5; rounds++) {
-        console.log("Round " + (rounds + 1));
-        const humanChoice = getHumanChoice(); // Get human choice for each round
-        const computerChoice = getComputerChoice(); // Get computer choice for each round
-        playRound(humanChoice, computerChoice); // Play the round with the chosen values
-    }
-
-    console.log("Final Score: Humans " + humanScore + ", Computer " + computerScore);
+function endGame() {
+    let finalResult;
     if (humanScore > computerScore) {
-        console.log("Congratulations! You won the game.");
+        finalResult = "Game Over! Congratulations! You won the game!";
     } else if (computerScore > humanScore) {
-        console.log("Computer wins the game. Better luck next time.");
+        finalResult = "Game Over! Computer wins the game. Better luck next time!";
     } else {
-        console.log("It's a tie overall!");
+        finalResult = "Game Over! It's a tie overall!";
     }
+    
+    document.getElementById("finalScore").textContent = finalResult;
+    document.getElementById("round").textContent = "Game Over - Click Reset to play again!";
+    
+    // Show reset button and hide choice buttons after game ends
+    document.getElementById("resetButton").style.display = "block";
+    document.getElementById("choices").style.display = "none";
 }
 
+function resetGame() {
+    // Reset all scores and counters
+    humanScore = 0;
+    computerScore = 0;
+    currentRound = 0;
+    
+    // Reset display
+    document.getElementById("round").textContent = `Round ${currentRound + 1} of ${TOTAL_ROUNDS}`;
+    document.getElementById("score").textContent = "Human: 0 Computer: 0";
+    document.getElementById("results").textContent = "Choose rock, paper, or scissors to start!";
+    document.getElementById("finalScore").textContent = "";
+    
+    // Show choices and hide reset button
+    document.getElementById("choices").style.display = "block";
+    document.getElementById("resetButton").style.display = "none";
+}
 
-playGame();
-
-// Testing results in the browser console
-console.log("the computer chose " + computerSelection)
-
-
-
-//console.log("the human chose " + getHumanChoice)
+// Initialize game display
+resetGame();

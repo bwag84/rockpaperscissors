@@ -10,7 +10,26 @@
 
 </head>
 <body>
-    <h1 class="pink">Welcome to console Rock Paper Scissors</h1>
+    <h1 class="pink">Welcome to Rock Paper Scissors</h1>
+
+
+    <div id="gameContainer">
+        <div id="round"></div>
+        <div id="score"></div>
+        <div id="results"></div>
+        <div id="finalScore"></div>
+        
+        <div id="choices">
+            <button onclick="playRound('rock')" class="choice-btn">Rock</button>
+            <button onclick="playRound('paper')" class="choice-btn">Paper</button>
+            <button onclick="playRound('scissors')" class="choice-btn">Scissors</button>
+        </div>
+        
+        <button id="resetButton" onclick="resetGame()" style="display: none;">Reset Game</button>
+    </div>
+
+
+
     
 </body>
 </html>
